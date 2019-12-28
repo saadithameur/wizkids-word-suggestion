@@ -4,16 +4,36 @@ $(document).ready(function () {
         var words = userText.split(" ");
         var currentLanguage = $("#userLanguage")[0].value;
         var currentWord = words[words.length - 1];
-        
-        //$("#userText").val("Hello world!");
+        if(currentWord.length<1) return;
+        var requestUrl= 'http://localhost:54464/getSuggestions?locale='+currentLanguage+'&text='+currentWord;
+        $.ajax({
+            url: requestUrl,
+            type: 'Get',
+            success: function (data) {
+                var json = jQuery.parseJSON(JSON.stringify(data));
+                var list1= json["dictionnarySuggestion"];
+                var li ="";
+                list1.forEach(element => {
+                    li += "<li id='"+element+"'>"+element+"</li>";
+                });
+                document.getElementById("dictionarySuggestions").innerHTML=li;
+
+                var list2= json["webServiceSuggestion"];
+                var li2 = "";
+                list2.forEach(element => {
+                    li2 += "<li id='"+element+"' onclick='myFunction("+element+")'>"+element+"</li>";
+                });
+                document.getElementById("serviceSuggestions").innerHTML=li2;
+            }
+          });
     }); 
-    $('li').click(function(event) {
-        var selectedSuggestion = ($(this).prop("id"));
-        var oldText = document.getElementById("userText").value;
-        var newText = oldText.substr(0, oldText.lastIndexOf(" ")+1);
-        newText=newText + selectedSuggestion;
-        $("#userText").val(newText);
-        document.getElementById("dictionarySuggestions").innerHTML="";
-        document.getElementById("serviceSuggestions").innerHTML="";
-    });
   });
+  function myFunction(parm1) {
+    var selectedSuggestion = parm1.innerText;
+    var oldText = document.getElementById("userText").value;
+    var newText = oldText.substr(0, oldText.lastIndexOf(" ")+1);
+    newText=newText + selectedSuggestion;
+    $("#userText").val(newText);
+    document.getElementById("dictionarySuggestions").innerHTML="";
+    document.getElementById("serviceSuggestions").innerHTML="";
+  }
