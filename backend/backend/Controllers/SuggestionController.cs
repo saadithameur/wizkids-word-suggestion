@@ -30,7 +30,7 @@ namespace backend.Controllers
             List<String> webServiceSuggestions = JsonConvert.DeserializeObject<List<String>>(json).ToList();
 
             //getting data from dextionary
-            List<String> dictionarySuggestions = new List<string>() { "cddd", "frfr", "frfr" };
+            List<String> dictionarySuggestions = new List<string>();
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Dictionary.db");
             SQLiteConnection con = new SQLiteConnection(@"Data Source="+path);
             con.Open();
